@@ -32,3 +32,8 @@ On WebDev:
 
 On SE:
 * [coding-interview-university](https://github.com/jwasham/coding-interview-university)
+
+
+----------------------------------------------------------------------------------------------------------------------------------
+On mobile app:
+* [To configure the developing enviornment]https://facebook.github.io/react-native/docs/getting-started.html
