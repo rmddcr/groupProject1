@@ -36,4 +36,4 @@ On SE:
 
 ----------------------------------------------------------------------------------------------------------------------------------
 On mobile app:
-* [To configure the developing enviornment]https://facebook.github.io/react-native/docs/getting-started.html
+* [To configure the developing enviornment](https://facebook.github.io/react-native/docs/getting-started.html)
