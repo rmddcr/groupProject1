@@ -1,7 +1,15 @@
 # group-project-1
 UCSC Year 2 Group Project 1
 
+I think it is better to submit every ones work in seperate folders.
+then we can finalize it later.
+guys please keep another copy of the project in hdd in case of an accedential deletion
+
+
+
+
 Hear are some links that i think help full for you people.
+
 
 Guides:
 * [WebPack kind of our IDE](https://www.youtube.com/watch?v=9kJVYpOqcVU)
