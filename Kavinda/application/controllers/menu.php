@@ -21,13 +21,12 @@ class menu extends CI_Controller {
 	public function _construct()
 	{
 		parent::__construct();
-        $this->load->model('menu_model');
-        $this->load->helper('url_helper');
+        $this->load->model('gen_model');
 	}
 
 	public function index()
 	{
-		$data['menu']=$this->menu_model->get_menu();
-		$this->load->view('menu',$data);
+//		$data['menu']=$this->menu_model->get_menu();
+		$this->load->view('menu');
 	}
 }

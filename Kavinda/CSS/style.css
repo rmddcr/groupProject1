@@ -1,11 +1,12 @@
 body {
-    background: #272727;
+    /*background: #272727;*/
 	width: 100%;
 	height: 100%;
 	margin: 0;
 	padding: 95px 0;
 	font-family: 'Source Sans Pro', sans-serif;
 	font-weight: 200;
+	background-image: url('../Images/cover.jpg');
 }
 
 .row-no-gutter {
@@ -159,7 +160,7 @@ svg {
 .city-selected:hover figure {
 	opacity: 0.4;
 	border-top-right-radius: 25px !important;
-	border-top-left-radius: 25px !important
+	border-top-left-radius: 25px !important;
 	border-bottom-right-radius: 25px !important;
 	border-bottom-left-radius: 25px !important
 }
@@ -200,14 +201,15 @@ figure {
 .days .row [class*="col-"]:hover{
 	background: #eaeaea;
 	border-top-right-radius: 25px !important;
-	border-top-left-radius: 25px !important
+	border-top-left-radius: 25px !important;
 	border-bottom-right-radius: 25px !important;
 	border-bottom-left-radius: 25px !important;
 }
 
 .day {
-	padding: 10px 0px;
+	padding: 10px 10px;
 	text-align: center;
+	min-height: 200px;
 
 }
 
@@ -221,4 +223,12 @@ figure {
 	color: #000;
 	width: 32px;
 	height: 32px;
+}
+
+.btn-menu{
+	height: 50px;
+	width: 100px;
+	font-size: medium;
+	margin-left: 20px;
+	margin-right: 20px;
 }
