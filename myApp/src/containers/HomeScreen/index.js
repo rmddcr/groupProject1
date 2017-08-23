@@ -14,7 +14,7 @@ export default class HomeScreen extends Component {
   render () {
     return (
       <View style={styles.container}>
-        <Text style={styles.text}> Login screen goes hear</Text>
+        <Text style={styles.text}> Loginxfghjkscreen goes hear</Text>
 
 
         <CustomButton
