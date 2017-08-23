@@ -5,8 +5,7 @@ import HomeScreen from './containers/HomeScreen'
 
 /**
  * The root component of the application.
- * In this component I am handling the entire application state, but in a real app you should
- * probably use a state management library like Redux or MobX to handle the state (if your app gets bigger).
+]
  */
 export class myApp extends Component {
   state = {
@@ -17,7 +16,7 @@ export class myApp extends Component {
 
   /**
    * Two login function that waits 1000 ms and then authenticates the user succesfully.
-   * In your real app they should be replaced with an API call to you backend.
+   * In real app they should be replaced with an API call to you backend.
    */
   _simulateLogin = (username, password) => {
     this.setState({ isLoading: true })
