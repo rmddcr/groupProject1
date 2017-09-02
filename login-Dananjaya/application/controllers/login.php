@@ -4,12 +4,12 @@ class Login extends CI_Controller{
 
 	function index()
 	{
-		$this->load->view('includes/header');
+		
 		$this->load->view('login_form');
-		$this->load->view('includes/footer');
+		
 	}
 
-	function validate_candentials()
+	function validate_credentials()
 	{
 		$this->load->model('membership_model');
 		$query= $this->membership_model->validate();
@@ -17,10 +17,12 @@ class Login extends CI_Controller{
 		if($query){
 			$data = array(
 				'username' => $this->input->post('username'),
+				'password' => $this->input->md5('password'),
 				'is_logged_in' => true
 				);
 			$this->session->set_userdata($data);
-			redirect('Welcome/index');//site/members_area
+			redirect('view');//site/members_area
+			//$this->load->view('site');
 		}
 		else
 		{
@@ -30,16 +32,17 @@ class Login extends CI_Controller{
 
 	
 	function signup()
-	{
-		$this->load->view('includes/header');
-		$this->load->view('signup_from');
-		$this->load->view('includes/footer');
+	{	
+		//$this->load->view('includes/header1');
+		$this->load->model("user_model");
+		$data["fetch_data"]=$this->user_model->fetch_data();
+		$this->load->view('signup_from',$data);
+		//$this->load->view('signup_from');
 	}
 
 	function create_member()
 	{
 		$this->load->library('form_validation');
-
 		$this->form_validation->set_rules('first_name', 'Name','trim|required');
 		$this->form_validation->set_rules('last_name', 'Last Name','trim|required');
 		$this->form_validation->set_rules('email', 'Email Address','trim|required|valid_email|max_length[15]|callback_check_if_email_exists');
@@ -49,31 +52,32 @@ class Login extends CI_Controller{
 
 		if($this->form_validation->run() == FALSE)
 		{
-			$this->load->view('includes/header');
-			$this->load->view('signup_from');
-			$this->load->view('includes/footer');
+			
+			$this->load->model("user_model");
+			$data["fetch_data"]=$this->user_model->fetch_data();
+			$this->load->view('signup_from',$data);
+			//$this->load->view('signup_from');
 		}
 		else
 		{
-			$this->load->model('membership_model');
+			$this->load->model('user_model');
 
-			if($query=$this->membership_model->create_member())
+			if($query=$this->user_model->create_member())
 			{
-				$data['account_created'] = 'Your account has been created. <br/><br/> You may be now login.';
-
-				$this->load->view('includes/header');
-				$this->load->view('login_form',$data);
-				$this->load->view('includes/footer');
+				redirect(base_url()."index.php/login/signup");
 			}
 			else
 			{
-				$this->load->view('includes/header');
-				$this->load->view('signup_form');
-				$this->load->view('includes/footer');
+				$this->load->model("user_model");
+				$data["fetch_data"]=$this->user_model->fetch_data();
+				$this->load->view('signup_from',$data);
+				//$this->load->view('signup_from');
 			}
+			
 		}
-
 	}
+
+	
 
 	function check_if_username_exists($requested_username){
 
@@ -100,5 +104,61 @@ class Login extends CI_Controller{
 			return FALSE;
 		}
 	}
+
+	function admin()
+	{
+
+		$this->load->view('admin');
+		$this->load->view('includes/footer');
+	}
+
+	
+	function users()
+	{
+		$this->load->model('user_model');
+
+		$data['manager'] = $this->user_model->get_user_detail();
+		
+		$this->load->view('users');
+		
+	}
+	
+	public function inserted(){
+		$this->signup();
+	}
+
+	function create_menu(){
+		$this->load->view('menu');
+	}
+
+	function view_order(){
+		$this->load->view('order');
+	}
+	public function ajax_edit($id)
+	{
+		$data = $this->membership_model->get_by_id($id);
+
+
+
+		echo json_encode($data);
+	}
+	public function member_update()
+	{
+		$data = array(
+				'first_name' => $this->input->post('first_name'),
+				'last_name' => $this->input->post('last_name'),
+				'email' => $this->input->post('email'),
+				'username' => $this->input->post('username'),
+				'password' => $this->input->post('password')
+			);
+		$this->membership_model->member_update(array('id' => $this->input->post('id')), $data);
+		echo json_encode(array("status" => TRUE));
+	}
+	public function member_delete($id)
+	{
+		$this->membership_model->delete_by_id($id);
+		echo json_encode(array("status" => TRUE));
+	}
+
 }
 ?>

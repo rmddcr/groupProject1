@@ -20,7 +20,6 @@ class Membership_model extends CI_Model{
 			'email' 	 => $this->input->post('email'),
 			'username'   => $this->input->post('username'),
 			'password'   => md5($this->input->post('password'))
-
 			); 
 
 		$insert = $this->db->insert('users', $new_member_insert_data);
@@ -50,7 +49,29 @@ class Membership_model extends CI_Model{
 			return TRUE;
 		}
 	}
-
-
+	//funtion get_user_details(){
+	//	$result = $this->db->get();
+	//}
+	public function get_by_id($id)
+	{
+		var $table = 'users';
+		$this->db->from($this->table);
+		$this->db->where('id',$id);
+		$query = $this->db->get();
+ 
+		return $query->row();
+	}
+	public function member_update($where, $data)
+	{
+		var $table = 'users';
+		$this->db->update($this->table, $data, $where);
+		return $this->db->affected_rows();
+	}
+	public function delete_by_id($id)
+	{
+		var $table = 'users';
+		$this->db->where('id', $id);
+		$this->db->delete($this->table);
+	}
 }
 ?>
