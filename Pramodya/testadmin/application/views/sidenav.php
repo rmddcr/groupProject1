@@ -98,7 +98,7 @@
         <nav class="navbar navbar-default navbar-fixed">
             <div class="container-fluid">
                 <div class="navbar-header">
-                    <a class="navbar-brand" href="#">Dashboard</a>
+                    <a class="navbar-brand" href="<?php echo base_url().'Main/dashboard'?>">Dashboard</a>
                 </div>
                 <div class="navbar-collapse">
                     <ul class="navbar-right">

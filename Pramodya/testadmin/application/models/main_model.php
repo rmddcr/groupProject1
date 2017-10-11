@@ -36,6 +36,10 @@ class Main_model extends CI_Model{
 		// $this->db->query("UPDATE $page SET picture='null',firstname=$firstname,lastname=$lastname,email=$email,password=$password WHERE id='$user_id'");
 		$this->db->where('id', $user_id);
 		$this->db->update($page, $data);
+		
 	}
+
+
+	
 }
 ?>

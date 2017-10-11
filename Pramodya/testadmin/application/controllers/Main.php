@@ -67,7 +67,7 @@ class Main extends CI_Controller {
 			if($this->form_validation->run()){
 				//true
 
-				$config['upload_path']="<?php echo base_url().'uploads'?>";
+				$config['upload_path']='./uploads';
 				$config['allowed_types']='*';
 				$this->load->library('upload',$config);
 				$this->upload->do_upload('file_name');
@@ -102,6 +102,7 @@ class Main extends CI_Controller {
 	// form validation for meals,beverages and desserts
 	public function form_validation_food($data){
 		$pagename=$this->uri->segment(3);
+		// $pagename='desserts';
 		
 		$this->load->library('form_validation');
 		$this->form_validation->set_rules("name","Name",'required');
@@ -127,14 +128,20 @@ class Main extends CI_Controller {
 				
 						
 			//finish image
-
+				$config['upload_path']='./uploads';
+				$config['allowed_types']='*';
+				$this->load->library('upload',$config);
+				$this->upload->do_upload('file_name');
+				$file_name=$this->upload->data();
+			//finsished image
+			
 			$this->load->model('main_model');
 			$data=array(
 				"name" =>$this->input->post("name"),
 				"description" =>$this->input->post("description"),
 				"price"    =>$this->input->post("price"),
 				"discount" =>$this->input->post("discount"),
-				"picture" =>$this->input->post("file_name")
+				'picture'=>$file_name['file_name']
 				);
 
 			$this->main_model->insert_data($data,$pagename);
@@ -168,6 +175,14 @@ class Main extends CI_Controller {
 
 			if($this->form_validation->run()){
 				//true
+
+				$config['upload_path']='./uploads';
+				$config['allowed_types']='*';
+				$this->load->library('upload',$config);
+				$this->upload->do_upload('file_name');
+				$file_name=$this->upload->data();
+
+
 				$this->load->model('main_model');
 				$data=array(
 					"firstname" =>$this->input->post("firstname"),
@@ -176,7 +191,8 @@ class Main extends CI_Controller {
 					"password" =>$this->input->post("password"),
 					"position" =>$this->input->post("position"),
 					"salary_per_hour" =>$this->input->post("salary_per_hour"),
-					"description"  =>$this->input->post("description")
+					"description"  =>$this->input->post("description"),
+					"picture" =>$file_name['file_name']
 					);
 
 				$this->main_model->insert_data($data,'employee');
@@ -224,6 +240,7 @@ class Main extends CI_Controller {
 	}
 
 	public function update_data(){
+
 		$page=$this->uri->segment(3);
 		$user_id = $this->uri->segment(4);
 		$this->load->model('main_model');
@@ -236,12 +253,21 @@ class Main extends CI_Controller {
 	public function update_form_data_customer(){
 		$page=$this->uri->segment(3);
 		$user_id = $this->uri->segment(4);
+
+
+			$config['upload_path']='./uploads';
+			$config['allowed_types']='*';
+			$this->load->library('upload',$config);
+			$this->upload->do_upload('file_name');
+			$file_name=$this->upload->data();
+
 		$this->load->model('main_model');
 				$data=array(
 					"firstname" =>$this->input->post("firstname"),
 					"lastname" =>$this->input->post("lastname"),
 					"email"    =>$this->input->post("email"),
-					"password" =>$this->input->post("password")
+					"password" =>$this->input->post("password"),
+					"picture"=>$file_name['file_name']
 					);
 		$this->main_model->update_data($user_id,$page,$data);
 		redirect(base_url().'main/customer/updated');
@@ -249,6 +275,15 @@ class Main extends CI_Controller {
 	public function update_form_data_employee(){
 		$page=$this->uri->segment(3);
 		$user_id = $this->uri->segment(4);
+
+
+			$config['upload_path']='./uploads';
+			$config['allowed_types']='*';
+			$this->load->library('upload',$config);
+			$this->upload->do_upload('file_name');
+			$file_name=$this->upload->data();
+
+
 		$this->load->model('main_model');
 				$data=array(
 					"firstname" =>$this->input->post("firstname"),
@@ -257,7 +292,8 @@ class Main extends CI_Controller {
 					"password" =>$this->input->post("password"),
 					"position" =>$this->input->post("position"),
 					"salary_per_hour" =>$this->input->post("salary_per_hour"),
-					"description"  =>$this->input->post("description")
+					"description"  =>$this->input->post("description"),
+					"picture"=>$file_name['file_name']
 					);
 		$this->main_model->update_data($user_id,$page,$data);
 		redirect(base_url().'main/employee/updated');
@@ -265,16 +301,46 @@ class Main extends CI_Controller {
 	public function form_Update_common(){
 		$page=$this->uri->segment(3);
 		$user_id = $this->uri->segment(4);
+
+				$config['upload_path']='./uploads';
+				$config['allowed_types']='*';
+				$this->load->library('upload',$config);
+				$this->upload->do_upload('file_name');
+				$file_name=$this->upload->data();
+
 		$this->load->model('main_model');
 				$data=array(
 				"name" =>$this->input->post("name"),
 				"description" =>$this->input->post("description"),
 				"price"    =>$this->input->post("price"),
-				"discount" =>$this->input->post("discount")				
+				"discount" =>$this->input->post("discount"),
+				"picture"=>$file_name['file_name']			
 				);
 
 		$this->main_model->update_data($user_id,$page,$data);
 		redirect(base_url().'main/'.$page.'/updated');
 	}
+
+	// file upload
+	// public function file_upload(){
+
+	// 	$config['upload_path']='./uploads';
+	// 	$config['allowed_types']='*';
+	// 	$this->load->library('upload',$config);
+	// 	$this->upload->do_upload('file_name');
+	// 	$file_name=$this->upload->data();
+
+	// 	$data=array('file_name'=>$file_name['file_name']);
+	// 	$this->load->model('mymodel');
+	// 	$add=$this->mymodel->File_upload($data);
+	// 	if($add){
+	// 		redirect(base_url().'desserts');
+	// 	}
+
+	// 	$rock=$this->uri->segment(3);
+	// 	echo $rock;
+
+	// }
+
 	
 }

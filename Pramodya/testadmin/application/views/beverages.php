@@ -4,7 +4,7 @@
 ?>
 	
 <div class="container">
-	<h3>Insert Data</h3>
+	<h3>Insert Data To Beverages</h3>
 	
 		<?php
 			if($this->uri->segment(3)=="updated"){
@@ -25,7 +25,7 @@
 			foreach($user_data->result_array()as $row){
 		?>
 
-		<form method="post" action="<?php echo base_url().'main/form_Update_common/beverages/'.$row['id'];?>">
+		<?php echo form_open_multipart('main/form_Update_common/beverages/'.$row['id']);?>
 		<div class="form-group">
 			<label>Name</label>
 			<input type="text" name="name" class="form-control" value="<?php echo $row['name'] ?>">
@@ -51,6 +51,10 @@
 			<span class="text-danger"><?php echo form_error("discount");?></span>
 		</div>
 		<div class="form-group">
+			<label>Image</label>
+			<input type="file" name="file_name">
+		</div> 
+		<div class="form-group">
 			<input type="submit" name="update" value="Update" class="btn-info btn-fill active">
 		</div>
 		<?php	
@@ -62,7 +66,7 @@
 		<!-- end from here ####################################################-->
 
 
-		<form method="post" action="<?php echo base_url().'main/form_validation_food/beverages';?>">
+		<?php echo form_open_multipart('main/form_validation_food/beverages');?>
 		<div class="form-group">
 			<label>Name</label>
 			<input type="text" name="name" class="form-control">
@@ -88,13 +92,17 @@
 			<span class="text-danger"><?php echo form_error("discount");?></span>
 		</div>
 		<div class="form-group">
+			<label>Image</label>
+			<input type="file" name="file_name">
+		</div> 
+		<div class="form-group">
 			<input type="submit" name="insert" value="Insert" class="btn-info btn-fill active">
 		</div>
 		
 	<?php
 		}
 		?> 
-	</form>
+	<?php echo form_close();?>
 
  </div>
 
@@ -106,6 +114,7 @@
  		<table class="table table-bordered">
  			<tr>
  				<th>ID</th>
+ 				<th>Image</th>
  				<th>Name</th>
  				<th>Description</th>
  				<th>Price(Rs)</th>
@@ -119,6 +128,7 @@
  			?>
  				<tr>
  					<td><?php echo $row->id; ?></td>
+ 					<td><img src="<?php echo base_url().'uploads/'.$row->picture;?>" height="60" width="100"></td>
  					<td><?php echo $row->name; ?></td>
  					<td><?php echo $row->description; ?></td>
  					<td><?php echo $row->price; ?></td>
