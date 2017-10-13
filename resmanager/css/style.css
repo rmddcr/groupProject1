@@ -1,0 +1,60 @@
+body{
+    background-image: url("images/background1.jpg");
+    background-position: center;
+    background-repeat: repeat;
+}
+div.transbox {
+  margin: 30px;
+  background-color: #ffffff;
+  border: 1px solid black;
+  opacity: 0.9;
+  filter: alpha(opacity=60); /* For IE8 and earlier */
+}
+
+div.transbox p {
+  margin: 5%;
+  font-weight: bold;
+  color: #000000;
+}
+div.transbox form {
+  margin: 5%;
+  font-weight: bold;
+  color: #000000;
+  height: 450px;
+  overflow: scroll;
+}
+
+.box{
+	margin: 5%;
+}
+.btn-right{
+	float: right;
+}
+
+.tb-responsive{
+  overflow-x:auto;
+}
+h4{
+  color: blue;
+}
+.div-over{
+  height:450px;
+  overflow:scroll;
+}
+.btn-top{
+  margin-top: 15px;
+}
+.btn-top1{
+  margin-top: 8px;
+}
+.nav-position{
+  position: fixed;
+  width: 100%;
+}
+.special-img 
+{
+    position: relative;
+    top: -5px;
+    float: left;
+    left: -5px;
+}
