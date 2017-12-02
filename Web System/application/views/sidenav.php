@@ -75,7 +75,7 @@
                 
                  <li>
                     <a href="<?php echo base_url().'Main/burger'?>">
-                        <i class="pe-7s-note2"></i>
+                        <i class="pe-7s-smile"></i>
                         <p>Burger</p>
                     </a>
                 </li>
@@ -87,13 +87,13 @@
                 </li>
                 <li>
                     <a href="<?php echo base_url().'Main/desserts'?>">
-                        <i class="pe-7s-cup"></i>
+                        <i class="pe-7s-wine"></i>
                         <p>Desserts</p>
                     </a>
                 </li>
                  <li>
                     <a href="<?php echo base_url().'Main/pizza'?>">
-                        <i class="pe-7s-note2"></i>
+                        <i class="pe-7s-graph"></i>
                         <p>Pizza</p>
                     </a>
                 </li>
@@ -105,7 +105,7 @@
                 </li>
                  <li>
                     <a href="<?php echo base_url().'Main/appetizer'?>">
-                        <i class="pe-7s-note2"></i>
+                        <i class="pe-7s-cup"></i>
                         <p>Appetizer</p>
                     </a>
                 </li>
