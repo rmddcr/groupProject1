@@ -1,0 +1,29 @@
+<ion-header>
+    <ion-navbar>
+      <ion-title>{{ catTitle }} Menu</ion-title>
+    </ion-navbar>
+  </ion-header>
+  
+  <ion-content class="menu-item-page page-background bg-image">
+    <ion-grid>
+      <!-- Start of the items lists -->
+      <ion-row>
+        <ion-col col-12 col-lg-6 col-md-6 *ngFor="let meal of meals">
+          <ion-card style="border-radius : 5px;">
+            <ion-row>
+            <ion-col col-6 style="padding : 0;">
+                <img src="{{ meal.meal_item_picture }}" class="card-image"/>
+            </ion-col>
+            <ion-col col-6>
+              <h2>{{ meal.meal_item_name }}</h2>
+             
+              <b>Rs:{{ meal.meal_item_price }}</b>
+              
+              <b><i>Rating : {{ meal.meal_item_rating }}/5</i></b>
+            </ion-col>
+            </ion-row>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+    </ion-content>

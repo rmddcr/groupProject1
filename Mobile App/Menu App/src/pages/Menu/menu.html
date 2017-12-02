@@ -1,0 +1,49 @@
+<div id="custom-overlay" [style.display]="splash ? 'flex': 'none'">
+    <div class="flb">
+      <div class="Aligner-item Aligner-item--top"></div>
+      <img src="assets/imgs/logo.png">
+      <div class="Aligner-item Aligner-item--bottom"></div>
+    </div>
+</div>
+<ion-header>
+  <ion-navbar>
+    <ion-title>Menu</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content class="card-background-page page-background bg-image">
+  <ion-grid style="padding : 0;">
+    <!-- Wide image on top -->
+    <ion-row>
+        <ion-slides autoplay="5000" loop="true" speed = "1000" pager>
+            <ion-slide *ngFor="let image of imageSlider">
+              <img src="{{ image.image }}" style="width : 100%; height : 30vh;">
+            </ion-slide>
+          </ion-slides>
+    </ion-row>
+    <!-- Start of the items lists -->
+    <ion-row>
+      <ion-col col-12 col-lg-6 col-md-6 *ngFor="let cat of cats">
+        <ion-card (click)='goToCat(cat.meal_cat_id, cat.meal_cat_name)'>
+          <img src="{{ cat.meal_cat_image }}" class="card-image"/>
+          <div class="card-title">{{ cat.meal_cat_name }}</div>
+          <div class="card-subtitle">41 Choices</div>
+        </ion-card>
+      </ion-col>
+      <ion-col col-12 col-lg-6 col-md-6>
+        <ion-card (click)='goToCat(Cat1)'>
+          <img src="assets/imgs/food (2).jpg" class="card-image"/>
+          <div class="card-title">Sides</div>
+          <div class="card-subtitle">64 Choices</div>
+        </ion-card>
+      </ion-col>
+        <ion-col col-12 col-lg-6 col-md-6>
+          <ion-card (click)='goToCat(Cat1)'>
+            <img src="assets/imgs/food (3).jpg" class="card-image"/>
+            <div class="card-title">Meals</div>
+            <div class="card-subtitle">41 Choices</div>
+          </ion-card>
+        </ion-col>
+    </ion-row>
+  </ion-grid>
+  </ion-content>
