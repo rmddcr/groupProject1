@@ -15,8 +15,7 @@ class Main extends CI_Controller {
 	public function customer(){
 		$this->load->model("main_model");
 		$page="customer";
-		$tablename='cust_users';
-		$data["fetch_data"]=$this->main_model->fetch_data($tablename);
+		$data["fetch_data"]=$this->main_model->fetch_data($page);
 		$this->load->view('customer',$data);
 	}
 
@@ -36,75 +35,85 @@ class Main extends CI_Controller {
 	// 	$this->load->view('employee',$data);
 	// }
 	
-	//view dessert page
-	public function desserts(){
+	
+	
+	
+	
+	public function item(){
 		$this->load->model("main_model");
-		$item_category='7';
+		$item_category=$this->uri->segment(3);
 		$data["fetch_data"]=$this->main_model->fetch_data($item_category);
-		$this->load->view('desserts',$data);
+		$data["item_category"]=$item_category;
+		//$data["item_category"]=$this->uri->segment(3);
+		$this->load->view('food_item',$data);
 	}
 	
-	//view burger page
-	public function burger(){
+	public function add_category(){
 		$this->load->model("main_model");
-		$item_category='2';
-		$data["fetch_data"]=$this->main_model->fetch_data($item_category);
-		$this->load->view('burger',$data);
+		$data["fetch_data"]=$this->main_model->fetch_data('meal_cat');
+		$this->load->view('food_cat',$data);
+	}	
+	public function add_cat_to_model(){
+		$tablename='meal_cat';
+		$this->load->model("main_model");
+
+			//upload the image
+			$config['upload_path']='./uploads';
+			$config['allowed_types']='*';
+			$this->load->library('upload',$config);
+			$this->upload->do_upload('file_name');
+			$file_name=$this->upload->data();
+
+			$data=array(
+						"meal_cat_name" =>$this->input->post("cat_name"),
+						"meal_cat_image" =>$file_name['file_name']
+						);
+			$this->main_model->insert_data($data,$tablename);
+			$this->dashboard();
+	
+	}	
+
+	public function choose_category(){
+		$pagename="meal_cat";
+		$this->load->model("main_model");
+		$data["category"]=$this->main_model->get_cagtegoy($pagename);
+		$this->load->view('category',$data);
 	}
 
-	//view pizza page
-	public function pizza(){
-		$this->load->model("main_model");
-		$item_category='3';
-		$data["fetch_data"]=$this->main_model->fetch_data($item_category);
-		$this->load->view('pizza',$data);
+	public function update_item_form(){
+		$this->load->view('update_item_form_view');
 	}
 
-	//view rice page
-	public function rice(){
-		$this->load->model("main_model");
-		$item_category='4';
-		$data["fetch_data"]=$this->main_model->fetch_data($item_category);
-		$this->load->view('rice',$data);
+	public function insert_item_form(){
+		$meal_item_category=$this->uri->segment(3);
+		$data=array(
+			'item_category'=>$meal_item_category
+		);
+		
+
+		$this->load->view('insert_item_form_view',$data);
 	}
 
-	//view appetizer page
-	public function appetizer(){
-		$this->load->model("main_model");
-		$item_category='5';
-		$data["fetch_data"]=$this->main_model->fetch_data($item_category);
-		$this->load->view('appetizer',$data);
-	}
-
-	//view beverage page
-	public function beverages(){
-		$this->load->model("main_model");
-		$item_category='6';
-		$data["fetch_data"]=$this->main_model->fetch_data($item_category);
-		$this->load->view('beverages',$data);
-	}
-
-
-
+	
 	
 	
 	// form validation for the pizza,burger, rice,appetizer,beverages and desserts
 	public function form_validation_food($data){
 		//get the current pagename where this data came form
-		$pagename=$this->uri->segment(3);
+		$item_category=$this->uri->segment(3);
 		$tablename='meal_items';
 		//validate data
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules("item_code","Item Code",'required');
-		$this->form_validation->set_rules("name","Name",'required');
-		$this->form_validation->set_rules("item_category","Item Category",'required');
+		$this->form_validation->set_rules("item_code","Item Code",'required|alpha_numeric');
+		$this->form_validation->set_rules("name","Name",'required|alpha');
 		$this->form_validation->set_rules("description","Description",'required');
-		$this->form_validation->set_rules("price","Price",'required');
-		
+		$this->form_validation->set_rules("item_rating","Item Rating",'numeric');
+		$this->form_validation->set_rules("price","Price",'required|decimal');
+
 		//if data is validated, (all the data inserted correctely)
-		if($this->form_validation->run()==TRUE){
+		if($this->form_validation->run()){
 			
-						
+							
 			//upload the image
 				$config['upload_path']='./uploads';
 				$config['allowed_types']='*';
@@ -113,43 +122,25 @@ class Main extends CI_Controller {
 				$file_name=$this->upload->data();
 			//finsished image
 			
-
 			//store the data in the database
 			$this->load->model('main_model');
 			$data=array(
 				"meal_item_code" =>$this->input->post("item_code"),
 				"meal_item_name" =>$this->input->post("name"),
 				"meal_item_desc" =>$this->input->post("description"),
-				"meal_item_cat" =>$this->input->post("item_category"),
-				"meal_item_price"    =>$this->input->post("price"),
-				
+				"meal_item_cat" =>$item_category,
+				"meal_item_price"    =>$this->input->post("price"),		
 				"meal_item_rating" =>$this->input->post("item_rating"),
 				'meal_item_picture'=>$file_name['file_name']
 				);
 
 			$this->main_model->insert_data($data,$tablename);
 
-			//after inserted data go back to the page wehre the data was come from with inserted keyword
-			redirect(base_url().'main/'.$pagename.'/inserted');
-			
+			// //after inserted data go back to the page wehre the data was come from with inserted keyword
+			// redirect(base_url().'main/'.$pagename.'/inserted');
+			$this->item();
 		}else{
-			/*if there is any error with the data go back to the page where data was come from using 
-				above implemented functions
-			*/
-			if($pagename=="desserts"){
-				$this->desserts();
-			}else if($pagename=="burger"){
-				$this->burger();
-			}else if($pagename=="pizza"){
-				$this->pizza();
-			}else if($pagename=="rice"){
-				$this->rice();
-			}else if($pagename=="appetizer"){
-				$this->appetizer();
-			}else if($pagename=="beverages"){
-				$this->beverages();
-			}
-			
+			$this->item();
 		}
 	}
 
@@ -159,14 +150,16 @@ class Main extends CI_Controller {
 		if($pagename=='customer'){
 			//to insert data i've used one functin in main_model. so here i used a variable called
 			// $tablename to insert data to customer.
-			$tablename='cust_users';
+			
 
 			//validate data passed from customer
 			$this->load->library('form_validation');
-			$this->form_validation->set_rules("firstname","First Name",'required');
-			$this->form_validation->set_rules("lastname","Lastname Name",'required');
-			$this->form_validation->set_rules("email","Email",'required');
+			$this->form_validation->set_rules("firstname","First Name",'required|alpha');
+			$this->form_validation->set_rules("lastname","Lastname Name",'required|alpha');
+			$this->form_validation->set_rules("phone","Phone",'required|regex_match[/^[0-9]{10}$/]');
+			$this->form_validation->set_rules("email","Email",'required|valid_email');
 			$this->form_validation->set_rules("password","Password",'required|min_length[8]');
+			$this->form_validation->set_rules("confirm_password","Confirm Password",'required|matches[password]|min_length[8]');
 
 			if($this->form_validation->run()){
 				//true
@@ -179,20 +172,39 @@ class Main extends CI_Controller {
 			
 				$this->load->model('main_model');
 				
+				$tablename='customer';
 				//make associative array to insert data 
+				$cutomer_email =$this->input->post("email");
 				$data=array(
 					"cust_first_name" =>$this->input->post("firstname"),
 					"cust_last_name" =>$this->input->post("lastname"),
-					"cust_email"    =>$this->input->post("email"),
-					"cust_password" =>$this->input->post("password"),
+					"cust_phone"    =>$this->input->post("phone"),	
+					"cust_email"    =>$cutomer_email,	
 					"cust_picture" =>$file_name['file_name']
 					);
+				
 
-				//pass the array to main_model to inert to database
-				$this->main_model->insert_data($data,$tablename);
+				
+					$this->main_model->insert_data($data,$tablename);		
+					$data["customer_id"]=$this->main_model->get_id($cutomer_email);
+					if(isset($data["customer_id"])){
+						foreach($data["customer_id"]->result_array()as $row){
+							$customer_id= $row['cust_id'];
+						}
+					}
+					
+					$imp_data=array(
+						"cust_id"    =>$customer_id,		
+						"cust_password" =>$this->input->post("password")
+						);
+					//pass the array to main_model to inert to database
+					$imp_data_table="cust_users";
+					
+					$this->main_model->insert_data($imp_data,$imp_data_table);
 
-				//return to customer view
-				redirect(base_url().'main/customer/inserted');
+					//return to customer view
+					redirect(base_url().'main/customer/inserted');
+				
 			}else{
 				//if data in invalid go back to customer page
 				$this->customer();
@@ -202,64 +214,12 @@ class Main extends CI_Controller {
 	}
 
 
-	//form validation employee
-	// public function form_validation_employee($data){
-	// 	$pagename=$this->uri->segment(3);
-	// 	if($pagename=='employee'or'userprofile'){
-	// 		$this->load->library('form_validation');
-	// 		$this->form_validation->set_rules("firstname","First Name",'required');
-	// 		$this->form_validation->set_rules("lastname","Lastname Name",'required');
-	// 		$this->form_validation->set_rules("email","Email",'required');
-	// 		$this->form_validation->set_rules("password","Password",'required|min_length[8]');
-	// 		$this->form_validation->set_rules("position","Position",'required');
-	// 		$this->form_validation->set_rules("salary_per_hour","Salary Per Hour",'required');
-	// 		$this->form_validation->set_rules("description","Description",'required');
-
-	// 		if($this->form_validation->run()){
-	// 			//true
-
-	// 			$config['upload_path']='./uploads';
-	// 			$config['allowed_types']='*';
-	// 			$this->load->library('upload',$config);
-	// 			$this->upload->do_upload('file_name');
-	// 			$file_name=$this->upload->data();
-
-
-	// 			$this->load->model('main_model');
-	// 			$data=array(
-	// 				"firstname" =>$this->input->post("firstname"),
-	// 				"lastname" =>$this->input->post("lastname"),
-	// 				"email"    =>$this->input->post("email"),
-	// 				"password" =>$this->input->post("password"),
-	// 				"position" =>$this->input->post("position"),
-	// 				"salary_per_hour" =>$this->input->post("salary_per_hour"),
-	// 				"description"  =>$this->input->post("description"),
-	// 				"picture" =>$file_name['file_name']
-	// 				);
-
-	// 			$this->main_model->insert_data($data,'employee');
-	// 			if($pagename=='employee'){
-	// 				redirect(base_url().'main/employee');
-	// 			}else{
-	// 				redirect(base_url().'main/userprofile');
-	// 			}
-
-	// 		}else{
-	// 			//false
-	// 			if($pagename=='employee'){
-	// 				$this->employee();
-	// 			}else{
-	// 				$this->userprofile();
-	// 			}
-	// 		}
-	// 	}
-	// }
 	
 	
 	//delete data function 
 	public function delete_data($page){
 		//get the page name where data is come from
-		$page=$this->uri->segment(3);
+		$meal_item_category=$this->uri->segment(3);
 
 		//get the id of the item to be deleted
 		$id=$this->uri->segment(4);
@@ -268,10 +228,19 @@ class Main extends CI_Controller {
 		$this->load->model('main_model');
 
 		//delete the data
-		$this->main_model->delete_data($id,$page);
+		$this->main_model->delete_category_data($id,$meal_item_category);
 
 		//after deleted data go back to the page where data is come from
-		redirect(base_url().'main/'.$page.'/deleted');
+		if($meal_item_category=='meal_cat'){
+			$this->add_category();
+		}
+		else if($meal_item_category!='customer'){
+			// redirect(base_url().'main/'.$page.'/deleted');
+			$this->item();
+		}else if($meal_item_category=='customer'){
+			redirect(base_url().'main/add_category');
+		}
+		
 	}
 	
 
@@ -279,41 +248,34 @@ class Main extends CI_Controller {
 	//when update is clicked show the data to be updated in the form/ only for food items
 	public function update_data(){
 		//get the page name where data is come from
-		$page=$this->uri->segment(3);
+		$meal_item_category=$this->uri->segment(3);
 
 		//get the id of the data to be updated
 		$user_id = $this->uri->segment(4);
 
-		//get the $item_category variable according to page 
-		// we need that variable to be known b/c in our db we use that number to identify page name. 
-		if($page=="burger"){
-			$item_category='2';
-		}else if($page=="pizza"){
-			$item_category='3';
-		}else if($page=="rice"){
-			$item_category='4';
-		}else if($page=="appetizer"){
-			$item_category='5';
-		}else if($page=="beverages"){
-			 $item_category='6';
-			
-		}else if($page=="desserts"){
-			$item_category='7';
+		if($meal_item_category!='customer'){
+			$page='meal_items';
 		}else{
-			$item_category='cust_users';
+			$page='customer';
 		}
-
+		
 		//load the model
 		$this->load->model('main_model');
-
+		$second_table="cust_users";
 		//get the data to be updated from the db as a array
 		$data['user_data']=$this->main_model->fetch_single_data($user_id,$page);
+		
 
-		//get the data which is shawn at the table from the db
-		$data['fetch_data']=$this->main_model->fetch_data($item_category);
+		// //get the data which is shawn at the table from the db
+		// $data['fetch_data']=$this->main_model->fetch_data($item_category);
 
+		if($meal_item_category!='customer'){
+			$this->load->view('update_item_form_view',$data);
+		}else{
+			$this->load->view('customer',$data);
+		}
 		//pass all that data into the page where update is called 
-		$this->load->view($page,$data);
+		
 
 	}
 
@@ -323,10 +285,12 @@ class Main extends CI_Controller {
 		$user_id = $this->uri->segment(4);
 
 		$this->load->library('form_validation');
-		$this->form_validation->set_rules("firstname","First Name",'required');
-		$this->form_validation->set_rules("lastname","Lastname Name",'required');
-		$this->form_validation->set_rules("email","Email",'required');
+		$this->form_validation->set_rules("firstname","First Name",'required|alpha');
+		$this->form_validation->set_rules("lastname","Lastname Name",'required|alpha');
+		$this->form_validation->set_rules("phone","Phone",'required|regex_match[/^[0-9]{10}$/]');
+		$this->form_validation->set_rules("email","Email",'required|valid_email');
 		$this->form_validation->set_rules("password","Password",'required|min_length[8]');
+		$this->form_validation->set_rules("confirm_password","Confirm Password",'required|matches[password]|min_length[8]');
 
 		if($this->form_validation->run()){
 
@@ -341,11 +305,17 @@ class Main extends CI_Controller {
 				$data=array(
 					"cust_first_name" =>$this->input->post("firstname"),
 					"cust_last_name" =>$this->input->post("lastname"),
+					"cust_phone" =>$this->input->post("phone"),
 					"cust_email"    =>$this->input->post("email"),
-					"cust_password" =>$newpass,
 					"cust_picture"=>$file_name['file_name']
 					);
+				$imp_data=array(	
+					"cust_password" =>$newpass
+					);
+			$other_table="cust_users";
+			
 			$this->main_model->update_data($user_id,$page,$data);
+			$this->main_model->update_data($user_id,$other_table,$imp_data);
 			redirect(base_url().'main/customer/updated');
 		}else{
 			$this->customer();
@@ -384,35 +354,49 @@ class Main extends CI_Controller {
 	/*when update butten is pressed from the update form do the changes in the db and update it./only for food items */
 	public function form_Update_common(){
 
-		$page=$this->uri->segment(3);
+		$meal_item_category=$this->uri->segment(3);
 		$user_id = $this->uri->segment(4);
 
-				//upload the image in to uploads folder
-				$config['upload_path']='./uploads';
-				$config['allowed_types']='*';
-				$this->load->library('upload',$config);
-				$this->upload->do_upload('file_name');
-				$file_name=$this->upload->data();
+		//validate data passed from customer
+		$this->load->library('form_validation');
+		$this->form_validation->set_rules("item_code","Item Code",'required|alpha_numeric');
+		$this->form_validation->set_rules("name","Name",'required|alpha');
+		$this->form_validation->set_rules("description","Description",'required');
+		$this->form_validation->set_rules("item_rating","Item Rating",'numeric');
+		$this->form_validation->set_rules("price","Price",'required|decimal');
 
-		$this->load->model('main_model');
+		if($this->form_validation->run()){
 
-		// get the data from the update form and store it in a array
+					//upload the image in to uploads folder
+					$config['upload_path']='./uploads';
+					$config['allowed_types']='*';
+					$this->load->library('upload',$config);
+					$this->upload->do_upload('file_name');
+					$file_name=$this->upload->data();
+
+			$this->load->model('main_model');
+
+			// get the data from the update form and store it in a array
+			
+				
 				$data=array(
 				"meal_item_code" =>$this->input->post("item_code"),
 				"meal_item_name" =>$this->input->post("name"),
-				"meal_item_cat" =>$this->input->post("item_category"),
+				"meal_item_cat" =>$meal_item_category,
 				"meal_item_desc" =>$this->input->post("description"),
-				"meal_item_price"    =>$this->input->post("price"),
-				
+				"meal_item_price"    =>$this->input->post("price"),			
 				"meal_item_rating" =>$this->input->post("item_rating"),
 				"meal_item_picture"=>$file_name['file_name']			
 				);
 
-		//pass this data to db model to be updated
-		$this->main_model->update_data($user_id,$page,$data);
+			//pass this data to db model to be updated
+			$this->main_model->update_data($user_id,$meal_item_category,$data);
 
-		//go gack to where the data is come from
-		redirect(base_url().'main/'.$page.'/updated');
+			//go gack to where the data is come from
+			$this->item();
+		}else{
+			$this->item();
+		}
 	}
 
 	
